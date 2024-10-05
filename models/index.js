@@ -1,19 +1,34 @@
-import { Sequelize } from "@sequelize/core";
+import { Sequelize } from "sequelize";
 // import { PostgresDialect } from "@sequelize/postgres";
-import { MySqlDialect } from "@sequelize/mysql";
+// import { MySqlDialect } from "@sequelize/mysql";
 import dotenv from "dotenv";
 import userFactory from "./user.model.js";
 import otpFactory from "./otp.model.js";
+import mysql2 from "mysql2";
 
 const { DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT } =
 	dotenv.config().parsed;
 
+const sequelize0 = new Sequelize({
+	dialect: "mysql",
+	username: DB_USER,
+	password: DB_PASSWORD,
+	dialectModule: mysql2,
+});
+try {
+	await sequelize0.query(`CREATE DATABASE IF NOT EXISTS ${DB_NAME};`);
+} catch (error) {
+	console.error(error);
+}
+
 const sequelize = new Sequelize({
-	dialect: MySqlDialect,
+	dialect: "mysql",
 	database: DB_NAME,
-	user: DB_USER,
+	username: DB_USER,
 	host: DB_HOST,
 	port: +DB_PORT,
+	password: DB_PASSWORD,
+	dialectModule: mysql2,
 });
 
 try {

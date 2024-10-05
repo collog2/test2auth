@@ -3,7 +3,7 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import dotenv from "dotenv";
 
-dotenv.config();
+const parsedDotEnv = dotenv.config();
 
 import indexRouter from "./routes/index.js";
 

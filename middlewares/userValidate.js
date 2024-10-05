@@ -14,13 +14,6 @@ const userValidate = async (req, res, next) => {
 			.json({ success: false, data: { message: "server error" } });
 	}
 
-	if (!user) {
-		return res.status(404).json({
-			success: false,
-			data: { message: "user doesn't exist." },
-		});
-	}
-
 	req["user"] = user;
 
 	next();

@@ -19,10 +19,8 @@ const signupController = async (req, res) => {
 	const { email, name, password, rememberMe } = req.body;
 	const passwordHash = bcrypt.hashSync(password, salt);
 
-	let user = await User.create(
-		{ email, name, password: passwordHash },
-		{ raw: true }
-	);
+	let user = await User.create({ email, name, password: passwordHash });
+	user = user.get({ plain: true });
 
 	delete user.password;
 

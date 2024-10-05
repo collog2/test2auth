@@ -6,7 +6,7 @@ const { JWT_SECRET, JWT_EXPIRES_IN } = dotenv.config().parsed;
 
 const loginController = async (req, res) => {
 	const { password } = req.body;
-	const { user } = req.user;
+	const user = req.user;
 
 	if (!bcrypt.compareSync(password, user.password)) {
 		return res

@@ -1,5 +1,6 @@
-import db from "../../models";
+import db from "../../models/index.js";
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
 
 const saltRounds = dotenv.config().parsed.BC_SALT_ROUNDS;
 const salt = bcrypt.genSaltSync(+saltRounds);
@@ -36,12 +37,10 @@ const resetController = async (req, res) => {
 		{ where: { id: user.id } }
 	);
 
-	return res
-		.status(201)
-		.json({
-			success: true,
-			data: { message: "Password reset successfully" },
-		});
+	return res.status(201).json({
+		success: true,
+		data: { message: "Password reset successfully" },
+	});
 };
 
 export default resetController;

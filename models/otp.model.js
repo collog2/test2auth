@@ -11,7 +11,7 @@ const otpFactory = (sequelize, Sequelize) => {
 		},
 		expires: {
 			type: DataTypes.DATE,
-			defaultValue: Date.now() + 10 * 60 * 1000,
+			defaultValue: new Date(Date.now() + 10 * 60 * 1000),
 		},
 	});
 

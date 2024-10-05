@@ -8,12 +8,19 @@ import userValidate from "../middlewares/userValidate.js";
 import forgetController from "../controllers/index/forget.controller.js";
 import verifyController from "../controllers/index/verify.controller.js";
 import resetController from "../controllers/index/reset.controller.js";
+import doesUserExist from "../middlewares/doesUserExist.js";
 
 var router = express.Router();
 
 router.get("/", indexController);
 
-router.post("/login", loginBodyValidate, userValidate, loginController);
+router.post(
+	"/login",
+	loginBodyValidate,
+	userValidate,
+	doesUserExist,
+	loginController
+);
 
 router.post("/signup", signupBodyValidate, userValidate, signupController);
 
