@@ -1,11 +1,12 @@
 import db from "../../models/index.js";
 
+const User = db.user;
 const Otp = db.otp;
 
 const verifyController = async (req, res) => {
 	const { code, email } = req.body;
 
-	const otpRecord = Otp.findOne({ where: { code, email } });
+	const otpRecord = await Otp.findOne({ where: { code, email } });
 	if (!otpRecord) {
 		return res
 			.status(404)

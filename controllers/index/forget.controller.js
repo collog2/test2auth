@@ -5,7 +5,7 @@ import nodemailer from "nodemailer";
 const Otp = db.otp;
 const { ADMIN_EMAIL, ADMIN_EMAIL_PASSWORD } = dotenv.config().parsed;
 
-const generateOTP = () => Math.random() * 10000;
+const generateOTP = () => Math.round(Math.random() * 10000);
 
 const transporter = nodemailer.createTransport({
 	service: "gmail",
@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
 
 const sendOTPEmail = (email, code) => {
 	const mailOptions = {
-		from: "your-email@gmail.com",
+		from: ADMIN_EMAIL,
 		to: email,
 		subject: "Password Reset OTP",
 		text: `Your OTP for password reset is ${code}`,
@@ -39,13 +39,13 @@ const forgetController = async (req, res) => {
 			data: { message: "email isn't registered" },
 		});
 	}
-
+	const user = req.user;
 	const code = generateOTP();
 	const expires = Date.now() + 10 * 60 * 1000; // 10 minutes from now
 
 	const otp = await Otp.create({ email: req.user.email, code, expires });
 
-	sendOTPEmail(email, code);
+	sendOTPEmail(user.email, code);
 
 	return res
 		.status(201)
