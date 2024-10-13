@@ -25,7 +25,7 @@ const sendOTPEmail = (email, code) => {
 
 	transporter.sendMail(mailOptions, (error, info) => {
 		if (error) {
-			console.log(error);
+			console.error(error);
 		} else {
 			console.log("Email sent: " + info.response);
 		}
@@ -33,23 +33,39 @@ const sendOTPEmail = (email, code) => {
 };
 
 const forgetController = async (req, res) => {
-	if (!req.user) {
-		return res.status(404).json({
-			success: false,
-			data: { message: "email isn't registered" },
+	try {
+		if (!req.user) {
+			return res.status(404).json({
+				success: false,
+				data: { message: "email isn't registered" },
+			});
+		}
+		const user = req.user;
+		const code = generateOTP();
+		const expires = Date.now() + 10 * 60 * 1000; // 10 minutes from now
+
+		const [otp, isCreated] = await Otp.findOrCreate({
+			where: { email: user.email },
+			defaults: { code, expires },
 		});
+		if (!isCreated) {
+			return res.status(409).json({
+				success: false,
+				data: { message: "Found another OTP for this email." },
+			});
+		}
+
+		sendOTPEmail(user.email, code);
+
+		return res
+			.status(201)
+			.json({ success: true, data: { message: "OTP sent to email" } });
+	} catch (error) {
+		console.error(error);
+		return res
+			.status(500)
+			.json({ success: false, data: { message: "server error" } });
 	}
-	const user = req.user;
-	const code = generateOTP();
-	const expires = Date.now() + 10 * 60 * 1000; // 10 minutes from now
-
-	const otp = await Otp.create({ email: req.user.email, code, expires });
-
-	sendOTPEmail(user.email, code);
-
-	return res
-		.status(201)
-		.json({ success: true, data: { message: "OTP sent to email" } });
 };
 
 export default forgetController;
