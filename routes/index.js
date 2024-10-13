@@ -9,6 +9,7 @@ import forgetController from "../controllers/index/forget.controller.js";
 import verifyController from "../controllers/index/verify.controller.js";
 import resetController from "../controllers/index/reset.controller.js";
 import doesUserExist from "../middlewares/doesUserExist.js";
+import doesUserNotExist from "../middlewares/doesUserNotExist.js";
 
 var router = express.Router();
 
@@ -22,7 +23,13 @@ router.post(
 	loginController
 );
 
-router.post("/signup", signupBodyValidate, userValidate, signupController);
+router.post(
+	"/signup",
+	signupBodyValidate,
+	userValidate,
+	doesUserNotExist,
+	signupController
+);
 
 router.post("/forgetPassword", userValidate, forgetController);
 

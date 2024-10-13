@@ -9,13 +9,6 @@ const salt = bcrypt.genSaltSync(+saltRounds);
 const User = db.user;
 
 const signupController = async (req, res) => {
-	if (req.user) {
-		return res.status(409).json({
-			success: false,
-			data: { message: "email is already taken" },
-		});
-	}
-
 	const { email, name, password, rememberMe } = req.body;
 	const passwordHash = bcrypt.hashSync(password, salt);
 
